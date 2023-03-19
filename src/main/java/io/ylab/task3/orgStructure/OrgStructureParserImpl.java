@@ -10,15 +10,15 @@ public class OrgStructureParserImpl implements OrgStructureParser {
     @Override
     public Employee parseStructure(File csvFile) {
         List<Employee> employees = readEmployeesFromFile();
-        buildEmployeeHierarchy(employees);
-        printEmployeeHierarchy(employees);
-        return employees.get(0);
+        Employee boss = buildEmployeeHierarchy(employees);
+        return boss;
     }
 
     private static List<Employee> readEmployeesFromFile() {
         List<Employee> employees = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(OrgStructureParserImpl.FILE_PATH))) {
             String line;
+            br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(DELIMITER);
                 Employee employee = new Employee();
@@ -34,7 +34,7 @@ public class OrgStructureParserImpl implements OrgStructureParser {
         return employees;
     }
 
-    private static void buildEmployeeHierarchy(List<Employee> employees) {
+    private static Employee buildEmployeeHierarchy(List<Employee> employees) {
         for (Employee employee : employees) {
             for (Employee subEmployee : employees) {
                 if (employee.getId().equals(subEmployee.getBossId())) {
@@ -43,22 +43,12 @@ public class OrgStructureParserImpl implements OrgStructureParser {
                 }
             }
         }
-    }
-
-    private static void printEmployeeHierarchy(List<Employee> employees) {
+        Employee boss = null;
         for (Employee employee : employees) {
-            printEmployeeHierarchy(employee, 0);
+            if (employee.getBoss() == null) {
+                boss = employee;
+            }
         }
-    }
-
-    private static void printEmployeeHierarchy(Employee employee, int level) {
-        for (int i = 0; i < level; i++) {
-            System.out.print("\t");
-        }
-        System.out.println("- " + employee.getName() + " (" + employee.getPosition() + ")");
-        for (Employee subordinate : employee.getSubordinate(employee)) {
-            printEmployeeHierarchy(subordinate, level + 1);
-        }
-
+        return boss;
     }
 }

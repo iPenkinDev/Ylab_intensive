@@ -15,6 +15,9 @@ public class Validator {
     public boolean isSorted() {
         try (Scanner scanner = new Scanner(new FileInputStream(file))) {
             long prev = Long.MIN_VALUE;
+
+            long lastPrintTs = System.currentTimeMillis();
+            long index = 0;
             while (scanner.hasNextLong()) {
                 long current = scanner.nextLong();
                 if (current < prev) {
@@ -22,7 +25,13 @@ public class Validator {
                 } else {
                     prev = current;
                 }
+                index++;
+                if (System.currentTimeMillis() - lastPrintTs > 5_000) {
+                    System.out.println("Validated: " + index + " items from ???");
+                    lastPrintTs = System.currentTimeMillis();
+                }
             }
+            scanner.close();
             return true;
         } catch (IOException ex) {
             ex.printStackTrace();

@@ -8,9 +8,7 @@ import java.time.temporal.ChronoUnit;
 public class Test {
     public static void main(String[] args) throws IOException {
         File tmpFolder = new File("tmp");
-        if (!tmpFolder.exists()) {
-            tmpFolder.mkdirs();
-        }
+        initTmpFolder(tmpFolder);
         File outputData = new File(tmpFolder, "data.txt");
 
         File dataFile = new Generator().generate(outputData.getAbsolutePath(), 100);
@@ -18,7 +16,17 @@ public class Test {
         LocalTime start = LocalTime.now();
         File sortedFile = new Sorter().sortFile(dataFile);
         LocalTime end = LocalTime.now();
-        System.out.println("Sorting time: " + start.until(end, ChronoUnit.SECONDS) + " seconds");
+        System.out.println("Sorting time: " + start.until(end, ChronoUnit.MILLIS) + " milliseconds");
         System.out.println(new Validator(sortedFile).isSorted()); // true
+    }
+
+    private static void initTmpFolder(File tmpFolder) {
+        if (!tmpFolder.exists()) {
+            tmpFolder.mkdirs();
+        } else {
+            for (File file : tmpFolder.listFiles()) {
+                file.delete();
+            }
+        }
     }
 }

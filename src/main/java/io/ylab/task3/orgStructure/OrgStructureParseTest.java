@@ -6,7 +6,7 @@ import java.io.IOException;
 public class OrgStructureParseTest {
     public static void main(String[] args) throws IOException {
         OrgStructureParserImpl parser = new OrgStructureParserImpl();
-        Employee employee = parser.parseStructure(new File("data.csv"));
-        System.out.println(employee);
+        Employee boss = parser.parseStructure(new File("data.csv"));
+        System.out.println("Boss is " + boss);
     }
 }
