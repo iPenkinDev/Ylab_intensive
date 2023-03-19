@@ -1,5 +1,7 @@
 .idea/
 .src/test/
 .target/
+*.txt
+*.txt.sorted
 # Project exclude paths
 /target/
