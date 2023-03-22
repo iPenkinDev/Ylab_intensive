@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class Sorter {
-    private static final int CHUNK_SIZE = 10; // block size
+    private static final int CHUNK_SIZE = 2_500_000; // block size
 
     //init comparator
     Comparator<SmartReader> smartReaderComparator = (s1, s2) -> {
@@ -74,7 +74,6 @@ public class Sorter {
         } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -109,7 +108,7 @@ public class Sorter {
 
     // record block to a file method
     private File writeChunkToFile(List<String> lines, int chunkIndex) throws IOException {
-        File chunkFile = new File("./tmp/chunk" + chunkIndex + ".txt");
+        File chunkFile = new File("./chunk" + chunkIndex + ".txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(chunkFile));
         for (String line : lines) {
             writer.write(line);
@@ -128,7 +127,7 @@ public class Sorter {
             readers.add(new SmartReader(sortedChunkFile.get()));
         }
 
-        File outputFile = new File("./tmp/output.txt");
+        File outputFile = new File("./output.txt");
         BufferedWriter outputWriter = new BufferedWriter(new FileWriter(outputFile));
 
 
@@ -151,6 +150,7 @@ public class Sorter {
         outputWriter.close();
         return outputFile;
     }
+
 
     // class for reading blocks
     private static class SmartReader {
@@ -176,5 +176,7 @@ public class Sorter {
             }
         }
     }
+
 }
+
 
